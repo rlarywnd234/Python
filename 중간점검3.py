@@ -1,3 +1,4 @@
+from operator import index, indexOf
 from tokenize import Double
 
 
@@ -39,20 +40,23 @@ def Item_Details(wishlist):
     
     while list_num < wishlist:
         checker = False
-        print("Item-{0} Details:".format(list_num+1))
+        print("\nItem-{0} Details:".format(list_num+1))
 
         itemcost = float(input("Item cost: $"))
-        itemimportant = int(input("How important is it to you? [1=must have, 2=important, 3=want]: "))
+        while checker == False: 
+                itemimportant = int(input("How important is it to you? [1=must have, 2=important, 3=want]: "))
+                
+                if itemimportant < 1 or itemimportant > 3:
+                    print("     ERROR: Value must be between 1 and 3")
+                    continue
+                    
+                else:
+                    wishlist_list.append([]) # 2차원 리스트 동적 할당, 인덱스 추가
+                    wishlist_list[list_num].append(itemcost)
+                    wishlist_list[list_num].append(itemimportant)# 2차원 리스트에 요소 추가 
+                    checker = True # while 탈출용 및 값 변경용
         
-        if itemimportant < 1 or itemimportant > 3:
-            print("     ERROR: Value must be between 1 and 3")
-            continue
-            
-        else:
-            wishlist_list.append([]) # 2차원 리스트 동적 할당, 인덱스 추가
-            wishlist_list[list_num].append(itemcost)
-            wishlist_list[list_num].append(itemimportant) # 2차원 리스트에 요소 추가
-            # while 탈출용 및 값 변경용
+        checker = False
 
         while checker == False:
             YorN = str(input("Does this item have financing options? [y/n]: "))
@@ -68,6 +72,7 @@ def Item_Details(wishlist):
     return wishlist_list
 
 
+
 #Variables
 income = 0
 wishlist = 0
@@ -77,7 +82,13 @@ print("+--------------------------+\n+ Wish List Forecaster |\n+----------------
 income = User_Income()      # 사용자 총수입 입력 함수
 wishlist = User_Wishlist()  # 사용자 위시리스트 개수 입력 함수
 
-print(Item_Details(wishlist))
+Item_list= Item_Details(wishlist)
+num = 1
+total = 0
+print("\nItem Priority Financed        Cost \n---- -------- -------- -----------")
+for x,y,z in Item_list:
+    print(str(num).ljust(7),str(y).ljust(8), str(z).ljust(8), str(x)) # 2차원 리스트 요소 각개 출력법 
+    num = num + 1
+    total = x + total
 
-
-
+print("---- -------- -------- -----------\n                       $ {0:.2f}".format(total))
